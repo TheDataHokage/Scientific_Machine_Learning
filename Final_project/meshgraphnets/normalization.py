@@ -16,10 +16,10 @@
 """Online data normalization."""
 
 import sonnet as snt
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 
 
-class Normalizer(snt.AbstractModule):
+class Normalizer(snt.Module):
   """Feature normalizer that accumulates statistics online."""
 
   def __init__(self, size, max_accumulations=10**6, std_epsilon=1e-8,
@@ -46,7 +46,7 @@ class Normalizer(snt.AbstractModule):
     with tf.control_dependencies([update_op]):
       return (batched_data - self._mean()) / self._std_with_epsilon()
 
-  @snt.reuse_variables
+#  @snt.reuse_variables
   def inverse(self, normalized_batch_data):
     """Inverse transformation of the normalizer."""
     return normalized_batch_data * self._std_with_epsilon() + self._mean()

@@ -18,14 +18,14 @@
 import collections
 import functools
 import sonnet as snt
-import tensorflow.compat.v1 as tf
+import tensorflow as tf
 
 EdgeSet = collections.namedtuple('EdgeSet', ['name', 'features', 'senders',
                                              'receivers'])
 MultiGraph = collections.namedtuple('Graph', ['node_features', 'edge_sets'])
 
 
-class GraphNetBlock(snt.AbstractModule):
+class GraphNetBlock(snt.Module):
   """Multi-Edge Interaction Network with residual connections."""
 
   def __init__(self, model_fn, name='GraphNetBlock'):
@@ -72,7 +72,7 @@ class GraphNetBlock(snt.AbstractModule):
     return MultiGraph(new_node_features, new_edge_sets)
 
 
-class EncodeProcessDecode(snt.AbstractModule):
+class EncodeProcessDecode(snt.Module):
   """Encode-Process-Decode GraphNet model."""
 
   def __init__(self,
