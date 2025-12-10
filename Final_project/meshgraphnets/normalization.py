@@ -27,13 +27,12 @@ class Normalizer(snt.Module):
     super(Normalizer, self).__init__(name=name)
     self._max_accumulations = max_accumulations
     self._std_epsilon = std_epsilon
-    with self._enter_variable_scope():
-      self._acc_count = tf.Variable(0, dtype=tf.float32, trainable=False)
-      self._num_accumulations = tf.Variable(0, dtype=tf.float32,
-                                            trainable=False)
-      self._acc_sum = tf.Variable(tf.zeros(size, tf.float32), trainable=False)
-      self._acc_sum_squared = tf.Variable(tf.zeros(size, tf.float32),
+    self._acc_count = tf.Variable(0, dtype=tf.float32, trainable=False)
+    self._num_accumulations = tf.Variable(0, dtype=tf.float32,
                                           trainable=False)
+    self._acc_sum = tf.Variable(tf.zeros(size, tf.float32), trainable=False)
+    self._acc_sum_squared = tf.Variable(tf.zeros(size, tf.float32),
+                                        trainable=False)
 
   def _build(self, batched_data, accumulate=True):
     """Normalizes input data and accumulates statistics."""
