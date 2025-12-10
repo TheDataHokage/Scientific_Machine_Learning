@@ -1,0 +1,14 @@
+Implementing code in pytorch
+
+example = _parse(proto, meta)
+
+# example is a dictionary:
+#  { 'velocity': tf.Tensor(...), 'pressure': tf.Tensor(...), ... }
+
+import torch
+data_torch = {k: torch.tensor(v.numpy()) for k, v in example.items()}
+
+
+tf.Tensor 
+   -> numpy()
+      -> torch.tensor()

@@ -1,0 +1,6 @@
+README.md
+setup.py
+meshgraphnets.egg-info/PKG-INFO
+meshgraphnets.egg-info/SOURCES.txt
+meshgraphnets.egg-info/dependency_links.txt
+meshgraphnets.egg-info/top_level.txt
