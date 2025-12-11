@@ -34,16 +34,12 @@ class Normalizer(snt.Module):
     self._acc_sum_squared = tf.Variable(tf.zeros(size, tf.float32),
                                         trainable=False)
 
-  def _build(self, batched_data, accumulate=True):
+  def __call__(self, batched_data, accumulate=True):
     """Normalizes input data and accumulates statistics."""
-    update_op = tf.no_op()
-    if accumulate:
-      # stop accumulating after a million updates, to prevent accuracy issues
-      update_op = tf.cond(self._num_accumulations < self._max_accumulations,
-                          lambda: self._accumulate(batched_data),
-                          tf.no_op)
-    with tf.control_dependencies([update_op]):
-      return (batched_data - self._mean()) / self._std_with_epsilon()
+    if accumulate and self._num_accumulations < self._max_accumulations:
+        self._accumulate(batched_data)  # just call it, no tf.cond needed
+
+    return (batched_data - self._mean()) / self._std_with_epsilon()
 
 #  @snt.reuse_variables
   def inverse(self, normalized_batch_data):
@@ -55,11 +51,10 @@ class Normalizer(snt.Module):
     count = tf.cast(tf.shape(batched_data)[0], tf.float32)
     data_sum = tf.reduce_sum(batched_data, axis=0)
     squared_data_sum = tf.reduce_sum(batched_data**2, axis=0)
-    return tf.group(
-        tf.assign_add(self._acc_sum, data_sum),
-        tf.assign_add(self._acc_sum_squared, squared_data_sum),
-        tf.assign_add(self._acc_count, count),
-        tf.assign_add(self._num_accumulations, 1.))
+    self._acc_sum.assign_add(data_sum)
+    self._acc_sum_squared.assign_add(squared_data_sum)
+    self._acc_count.assign_add(count)
+    self._num_accumulations.assign_add(1.0)
 
   def _mean(self):
     safe_count = tf.maximum(self._acc_count, 1.)
