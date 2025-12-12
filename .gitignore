@@ -1,1 +1,4 @@
 Final_project/data/
+Final_project/checkpoints/
+Final_project/Old_model_100000/
+Final_project/rollout_trajectories.pkl
